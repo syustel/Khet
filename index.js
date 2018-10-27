@@ -29,6 +29,7 @@ function handleRequest(req, res){
   var contentType = typeExt[ext] || 'text/plain';
 
   // User file system module
+  
   fs.readFile(__dirname + pathname,
     // Callback function for reading
     function (err, data) {
