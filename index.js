@@ -1,10 +1,10 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var app = require('http').createServer(handleRequest)
+var io = require('socket.io')(app);
 var fs = require('fs');
 var path = require('path');
 
-app.get('/', handleRequest);
+app.listen(8080);
+console.log('listening on *:8080');
 
 function handleRequest(req, res){
     // What did we request?
@@ -53,8 +53,4 @@ io.on('connection', function(socket){
     console.log('message: ' + msg);
     io.emit('todos', msg);
   });
-});
-
-http.listen(8080, function(){
-  console.log('listening on *:8080');
 });
