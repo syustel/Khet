@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Aplicación con Sockets</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
+  <script language="javascript" type="text/javascript" src="sketch.js"></script>
+</head>
+<body>
+  <h1>My App</h1>
+
+  <button onclick="myFunction()">Click me</button>
+
+  <p id="demo"></p>
+
+<script>
+  var socket = io();
+
+  socket.on('todos', function(msg){
+    document.getElementById("demo").innerHTML = "Hello World";
+  });
+
+  function myFunction() {
+    socket.emit('clicked', 'Hello World');
+    //document.getElementById("demo").innerHTML = "Hello World";
+  }
+</script>
+
+</body>
+</html>
