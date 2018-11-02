@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include bootstrap/head %>
+  </head>
+  <body class="signup">
+    <div class="container">
+      <div class="col-sm-6 mx-auto">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h1 class="text-center">
+              <span class="fa fa-user"></span> Registrarse
+            </h1>
+            <% if (message.length > 0) { %>
+              <div class="alert alert-danger">
+                <%= message %>
+              </div>
+            <% } %>
+
+            <form action="/signup" method="post">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control">
+              </div>
+              <input type="submit" class="btn btn-blue">
+            </form>
+
+            <hr>
+            <div class="text-center">
+              <p>Ya tienes una cuenta <a href="/login">Iniciar Sesión</a></p>
+              <p>Volver <a href="/">home</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
