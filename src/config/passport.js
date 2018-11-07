@@ -60,4 +60,24 @@ module.exports = function (passport) {
       return done(null, user);
     });
   }));
+
+  passport.use('local-update', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  function (req, email, password, done) {
+    console.log("entra a la funcion");
+    User.findOne({'local.email': email}, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, req.flash('loginMessage', 'Usuario no existe'))
+      }
+      if (!user.validar(password)) {
+        return done(null, false, req.flash('loginMessage', 'Constraseña invalida'));
+      }
+      //return done(null, user);
+      console.log(user);
+    });
+  }));
 }

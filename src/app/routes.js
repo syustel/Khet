@@ -38,6 +38,18 @@ module.exports = (app, passport) => {
 		});
 	});
 
+	app.get('/update', isLoggedIn, (req, res) => {
+		res.render('update', {
+			user: req.user
+		});
+	});
+
+	app.post('/update', passport.authenticate('local-update', {
+		successRedirect: '/profile',
+		failureRedirect: '/update',
+		failureFlash: true 
+	}));
+
 	
 	app.get('/logout', (req, res) => {
 		req.logout();
