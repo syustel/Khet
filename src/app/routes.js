@@ -31,12 +31,20 @@ module.exports = (app, passport) => {
 		failureFlash: true 
 	}));
 
+
+
 	
 	app.get('/profile', isLoggedIn, (req, res) => {
 		res.render('profile', {
 			user: req.user
 		});
 	});
+
+	app.get('/profile/ranking', isLoggedIn, (req, res) => {
+		res.render('ranking', {
+			user: req.user
+		});
+	});	
 
 	
 	app.get('/logout', (req, res) => {

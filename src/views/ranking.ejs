@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include bootstrap/head %>
+  </head>
+  <body class="ranking">
+    <div class="container">
+      <div class="col-sm-6 mx-auto">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h1 class="text-center">
+              <span class="fa fa-user"></span> Ranking
+            </h1>
+              <div class="form-group">
+                <label for="email">ELOs</label>
+                <strong>id</strong> : <%= db.users.find().pretty() %> <br>                
+              </div>
+            <hr>
+            <div class="text-center">
+              <p>Volver <a href="/profile">profile</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
