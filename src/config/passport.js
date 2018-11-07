@@ -79,7 +79,4 @@ passport.use('local-ranking', new LocalStrategy({
       return done(null, user);
     });
   }));
-
-
-
 }
