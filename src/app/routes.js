@@ -31,12 +31,32 @@ module.exports = (app, passport) => {
 		failureFlash: true 
 	}));
 
+
+
 	
 	app.get('/profile', isLoggedIn, (req, res) => {
 		res.render('profile', {
 			user: req.user
 		});
 	});
+
+	app.get('/profile/ranking', isLoggedIn, (req, res) => {
+		res.render('ranking', {
+			user: req.user
+		});
+	});	
+
+	app.get('/update', isLoggedIn, (req, res) => {
+		res.render('update', {
+			user: req.user
+		});
+	});
+
+	app.post('/update', passport.authenticate('local-update', {
+		successRedirect: '/profile',
+		failureRedirect: '/update',
+		failureFlash: true 
+	}));
 
 	
 	app.get('/logout', (req, res) => {
