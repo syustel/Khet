@@ -1,3 +1,21 @@
+const User = require('../app/models/user');
+
+
+function buscar(req,res){
+
+    User.find(function (err, data) {
+   
+
+   	for (var i = 0; i < data.length; i++) {
+	res.write( data[i].local.username + '\t' + data[i].local.elo + '\t' + data[i].local.email + '\n');
+	}
+    
+    res.end();
+    });
+
+}
+
+
 module.exports = (app, passport) => {
 
 	
@@ -37,6 +55,19 @@ module.exports = (app, passport) => {
 			user: req.user
 		});
 	});
+
+	app.get('/profile/ranking', isLoggedIn, buscar, (req, res) => {
+		res.render('ranking', {
+			user: req.user
+		});
+	});
+
+	app.get('/profile/ficha', isLoggedIn, (req, res) => {
+		res.render('ficha', {
+			user: req.user
+		});
+	});
+
 
 	
 	app.get('/logout', (req, res) => {

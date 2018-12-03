@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include bootstrap/head %>
+  </head>
+  <body>
+    <div class="container">
+      <header class="text-center">
+        <h1>Perfil Usuario</h1>
+      </header>
+      <hr>
+
+      <div class="container">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title"><span class="fa fa-user"></span> Ficha</h3>
+              <p>
+                <strong>id</strong> : <%= user._id %> <br>
+                <strong>email</strong> : <%= user.local.email %> <br>
+                <strong>password</strong> : <%= user.local.password %><br>
+                <strong>nationality</strong> : <%= user.local.nationality %> <br>
+                <strong>elo</strong> : <%= user.local.elo %> <br>
+                <strong>password</strong> : <%= user.local.password %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
