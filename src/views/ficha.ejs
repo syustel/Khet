@@ -18,10 +18,13 @@
               <p>
                 <strong>id</strong> : <%= user._id %> <br>
                 <strong>email</strong> : <%= user.local.email %> <br>
+                <strong>name</strong> : <%= user.local.username %> <br>
                 <strong>password</strong> : <%= user.local.password %><br>
                 <strong>nationality</strong> : <%= user.local.nationality %> <br>
                 <strong>elo</strong> : <%= user.local.elo %> <br>
-                <strong>password</strong> : <%= user.local.password %>
+              <a href="/profile/ficha/update" class="btn btn-light btn-sm">
+                Update
+              </a>                
               </p>
             </div>
           </div>

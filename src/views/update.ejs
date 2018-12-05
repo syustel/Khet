@@ -12,18 +12,20 @@
               <span class="fa fa-user"></span> Actualizar información
             </h1>
 
-            <form action="/update" method="post">
+            <form action="/profile/<%= user._id %>?_method=PUT" method="post">  
               <div class="form-group">
-                <label for="username">Name</label>
-                <input type="text" name="username" class="form-control">
+                <strong>Hi</strong> <%= user.local.username %> <br>
+                <input type="hidden"  name="_method" value="PUT"><br>
+                <strong>email</strong> : <%= user.local.email %> <br>
+                <input type="text" name="email" value="<%= user.local.email %>"><br>
+                <strong>name</strong> : <%= user.local.username %> <br>
+                <input type="text" name="username" value="<%= user.local.username %>"><br>
+                <strong>nationality</strong> : <%= user.local.nationality %> <br>
+                <input type="text" name="nationality" value="<%= user.local.nationality %>"><br>
               </div>
-              <input type="submit" class="btn btn-blue">
+              <button type="submit"> UPDATE </button>
             </form>
             <br>
-            <a href="/profile" class="btn btn-light btn-sm">
-              Volver
-            </a>
-
             <hr>
           </div>
         </div>

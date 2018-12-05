@@ -56,6 +56,12 @@ module.exports = (app, passport) => {
 		});
 	});
 
+	app.post('/profile', isLoggedIn, (req, res) => {
+		res.render('profile', {
+			user: req.user
+		});
+	});	
+
 	app.get('/profile/ranking', isLoggedIn, buscar, (req, res) => {
 		res.render('ranking', {
 			user: req.user
@@ -67,7 +73,62 @@ module.exports = (app, passport) => {
 			user: req.user
 		});
 	});
+	app.post('/profile/ficha', isLoggedIn, (req, res) => {
+		res.render('ficha', {
+			user: req.user
+		});
+	});
 
+	app.get('/profile/ficha/update', isLoggedIn, (req, res) => {
+		res.render('update', {
+			user: req.user
+		});
+	});
+
+//	app.post('/profile/:id', isLoggedIn, (req, res) => {
+//		res.render('ficha', {
+//			user: req.user
+//		});
+//	});
+
+	app.put('/profile/:id', isLoggedIn, function(req, res) {
+		var id = req.params.id;
+		User.findOne({_id: id}, function(err,foundObject){
+			if(err){
+				console.log(err);
+				res.status(500).send();
+			}
+			else {
+				if(!foundObject){
+					res.status(404).send();
+				} else{
+					if(req.body.username){
+						foundObject.local.name = req.body.username;
+					}
+					if(req.body.email){
+						foundObject.local.email = req.body.email;
+					}
+					if(req.body.nationality){
+						foundObject.local.nationality = req.body.nationality;
+					}
+					foundObject.save(function(err,updateObject){
+						if(err){
+							console.log(err);
+							res.status(500).send();
+						}else{
+							
+							res.render('ficha', {
+							user: updateObject
+			});
+						}
+
+
+					});
+				}
+			}
+		})
+		
+	});	
 
 	
 	app.get('/logout', (req, res) => {

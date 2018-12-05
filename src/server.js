@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-
+const methodOverride = require('method-override');
 var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -36,6 +36,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(methodOverride('_method'));
 
 
 require('./app/routes.js')(app, passport);
