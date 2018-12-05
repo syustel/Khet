@@ -74,6 +74,10 @@ module.exports = (app, passport) => {
 		req.logout();
 		res.redirect('/');
 	});
+
+	app.get('/game', (req, res) => {
+		res.render('game');
+	});
 };
 
 function isLoggedIn (req, res, next) {

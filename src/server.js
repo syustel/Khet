@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 var path = require('path');
 var mongoose = require('mongoose');
@@ -42,7 +44,12 @@ require('./app/routes.js')(app, passport);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.listen(app.get('port'), () => {
-	console.log('server on port ', app.get('port'));
+http.listen(process.env.PORT || '3000');
+io.on('connection', function(socket){
+  console.log('\n\na user connected: ' + socket.id + '\n\n');
 });
+
+
+//app.listen(app.get('port'), () => {
+//	console.log('server on port ', app.get('port'));
+//});
