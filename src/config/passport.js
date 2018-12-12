@@ -34,7 +34,7 @@ module.exports = function (passport) {
         newUser.local.password = newUser.encriptar(password);
         newUser.local.username = req.body.username;
         newUser.local.nationality = req.body.nationality;
-        newUser.local.elo = req.body.elo;
+        newUser.local.elo = 10000;
         newUser.save(function (err) {
           if (err) { throw err; }
           return done(null, newUser);
