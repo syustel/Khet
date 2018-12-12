@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="/socket.io/socket.io.js"></script>
     <% include bootstrap/head %>
   </head>
   <body>
@@ -12,8 +13,8 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-md-4 offset-md-9">
-            <a href="/profile/ficha/" class="btn btn-light btn-sm">
+          <div class="col-md-5 offset-md-4">
+            <a href="/profile/ficha" class="btn btn-light btn-sm">
               Profile User
             </a>
             <a href="/profile/ranking" class="btn btn-light btn-sm">
@@ -22,14 +23,39 @@
             <a href="/logout" class="btn btn-light btn-sm">
               Logout
             </a>
-            <a href="/game" class="btn btn-light btn-sm">
-              Game
+            <a href="/update" class="btn btn-light btn-sm">
+              Update
+            </a>
+            <a href="/game?player_type=host" class="btn btn-light btn-sm">
+              Create Game
+            </a>
+            <a onclick="searchGame()" class="btn btn-light btn-sm">
+              Search Game
             </a>
 
             </div>
           </div>
         </div>
+
+        <div id="games">
+        </div>
       </div>
     </div>
   </body>
 </html>
+
+<script type="text/javascript">
+var socket = io();
+function searchGame() {
+  socket.emit('searchGame');
+}
+
+socket.on('gamesFound', function(gamesFound) {
+  console.log(gamesFound);
+  var i;
+  document.getElementById("games").innerHTML = ""
+  for (var i = 0; i < gamesFound.length; i++) {
+    document.getElementById("games").innerHTML += '<a href="/game?player_type=guest&host=' + gamesFound[i] + '" class="btn btn-light btn-sm">' + gamesFound[i] + '</a>' + '<br>'
+  }
+});
+</script>

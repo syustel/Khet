@@ -50,8 +50,65 @@ require('./app/routes.js')(app, passport);
 app.use(express.static(path.join(__dirname, 'public')));
 
 http.listen(process.env.PORT || '3000');
+
+
+var games = [];
+
 io.on('connection', function(socket){
-  console.log('\n\na user connected: ' + socket.id + '\n\n');
+  console.log('a user connected: ' + socket.id);
+
+  socket.on('gameCreated', function() {
+    games.push(socket.id);
+  });
+
+  socket.on('searchGame', function(){
+    io.to(socket.id).emit('gamesFound', games);
+  });
+
+  socket.on('guestArrive', function(oponent){
+    io.to(oponent).emit('oponentArrive', socket.id);
+  });
+
+  socket.on('play', function(cellX, cellY, oponent) {
+    io.to(socket.id).emit('play', cellX, cellY);
+    io.to(oponent).emit('play', cellX, cellY);
+  });
+
+
+
+  ////////////sokcets viejos
+  /*
+  socket.on('playerArrives', function(){
+    //console.log(socket.id);
+    if (!playersID[0]) {
+      playersID[0] = socket.id;
+      //io.emit('playerReady');
+      io.to(socket.id).emit('playerReady', 'O')
+      //console.log("playerReady");
+    }
+    else if (!playersID[1] && playersID[0]!=socket.id) {
+      playersID[1] = socket.id;
+      io.to(socket.id).emit('playerReady', 'X')
+      //io.emit('playerReady');
+    }
+    //if (!playersID[p]) {
+    //  playersID[p] = socket.id;
+    //  io.emit('playerReady', p);
+    //}
+  });
+
+  socket.on('move', function(cellX, cellY){
+    //console.log(cellX + cellY);
+    if (socket.id == playersID[turn]) {
+      //console.log("move");
+      turn = (turn + 1) % 2;
+      var p = turn * (-2) + 1;
+      io.emit('move', cellX, cellY, p);
+      
+    }
+  });
+  */
+
 });
 
 
