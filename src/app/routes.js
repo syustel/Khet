@@ -136,15 +136,6 @@ module.exports = (app, passport) => {
 				if(!foundObject){
 					res.status(404).send();
 				} else{
-					if(req.body.username){
-						foundObject.local.username = req.body.username;
-					}
-					if(req.body.email){
-						foundObject.local.email = req.body.email;
-					}
-					if(req.body.nationality){
-						foundObject.local.nationality = req.body.nationality;
-					}
 					if (req.query.win == "1"){
 						if(foundObject.local.elo){
 							foundObject.local.elo = foundObject.local.elo + 20;
