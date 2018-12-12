@@ -11,7 +11,7 @@
             <h1 class="text-center">
               <span class="fa fa-user"></span> Actualizar información
             </h1>
-
+            <!-- <form action="/nextgame/<%= user._id %>?win=1&_method=PUT" method="post">   --> 
             <form action="/profile/<%= user._id %>?_method=PUT" method="post">  
               <div class="form-group">
                 <strong>Hi</strong> <%= user.local.username %> <br>
@@ -22,6 +22,7 @@
                 <input type="text" name="username" value="<%= user.local.username %>"><br>
                 <strong>nationality</strong> : <%= user.local.nationality %> <br>
                 <input type="text" name="nationality" value="<%= user.local.nationality %>"><br>
+                
               </div>
               <button type="submit"> UPDATE </button>
             </form>

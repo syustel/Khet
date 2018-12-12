@@ -85,12 +85,6 @@ module.exports = (app, passport) => {
 		});
 	});
 
-//	app.post('/profile/:id', isLoggedIn, (req, res) => {
-//		res.render('ficha', {
-//			user: req.user
-//		});
-//	});
-
 	app.put('/profile/:id', isLoggedIn, function(req, res) {
 		var id = req.params.id;
 		User.findOne({_id: id}, function(err,foundObject){
@@ -130,6 +124,57 @@ module.exports = (app, passport) => {
 		
 	});	
 
+	app.put('/nextgame/:id', isLoggedIn, (req, res) => {
+		console.log(req);
+		var id = req.params.id;
+		User.findOne({_id: id}, function(err,foundObject){
+			if(err){
+				console.log(err);
+				res.status(500).send();
+			}
+			else {
+				if(!foundObject){
+					res.status(404).send();
+				} else{
+					if(req.body.username){
+						foundObject.local.username = req.body.username;
+					}
+					if(req.body.email){
+						foundObject.local.email = req.body.email;
+					}
+					if(req.body.nationality){
+						foundObject.local.nationality = req.body.nationality;
+					}
+					if (req.query.win == "1"){
+						if(foundObject.local.elo){
+							foundObject.local.elo = foundObject.local.elo + 20;
+						}
+					}
+					if(req.query.win == "0" ){
+						if(foundObject.local.elo){
+							foundObject.local.elo = foundObject.local.elo - 20;
+						}
+					}
+				    
+
+					foundObject.save(function(err,updateObject){
+						if(err){
+							console.log(err);
+							res.status(500).send();
+						}else{
+							
+							res.render('nextgame', {
+							user: updateObject
+			});
+						}
+
+
+					});
+				}
+			}
+		})
+	});
+	
 	
 	app.get('/logout', (req, res) => {
 		req.logout();
