@@ -13,7 +13,7 @@
             </h1>
               <div class="form-group">
                 <label for="email">ELOs</label>
-                <strong>id</strong> : <%= db.users.find().pretty() %> <br>                
+                <strong>id</strong> : <%= users[10] %> <br>                
               </div>
             <hr>
             <div class="text-center">
@@ -25,3 +25,7 @@
     </div>
   </body>
 </html>
+
+<script type="text/javascript">
+  console.log(<%= users.length %>)
+</script>

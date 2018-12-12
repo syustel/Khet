@@ -4,53 +4,210 @@
   <meta charset="UTF-8">
   <title>Game</title>
   <script src="/socket.io/socket.io.js"></script>
-  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>}
+  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
 </head>
 <body>
   <h1>Khet</h1>
 
+  <div id="player"></div>
+  <div id="turno"></div>
+  <div id="rematch"></div>
+  <div id="oponent"></div>
 </body>
 </html>
 
 <script type="text/javascript">
 var socket = io();
-//var img;
-var tablero = [[0, 0, 0], [0, 1, 1], [0, 0, 0]];
+var oponent;
+var turn = 1;
+var side;
+var tablero = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+var game = true;
+var lastMove = [];
+
+if ("<%= player_type %>" == "host") {
+  side = 1;
+  socket.emit('gameCreated');
+}
+else if ("<%= player_type %>" == "guest") {
+  oponent = "<%= host %>";
+  side = -1;
+  socket.emit('guestArrive', oponent);
+}
 
 function setup() {
-  createCanvas(601, 501);
-  //img = loadImage('Captura.PNG');
+  createCanvas(600, 600);
 }
 
 function draw() {
-  var x;
-  var y;
-  fill(100);
-  strokeWeight(4);
-  rectMode(CORNER);
-  for (x = 0; x < 10; x++) {
-    for (y = 0; y < 8; y++) {
-        rect(x*60, y*60, 60, 60);
-    }
+  drawTablero();
+  drawXOs();  
+}
+
+function drawTablero() {
+  background(255);
+  strokeWeight(2);
+  stroke(0);
+  var i;
+  for (i = 1; i < 15; i ++) {
+    line(40*i, 0 , 40*i, 600);
+    line(0, 40*i, 600, 40*i);
   }
-  fill(200, 0, 0);
-  rectMode(CENTER);
+}
+
+function drawXOs() {
+  if (lastMove) {
+    fill(230);
+    rect(lastMove[0]*40, lastMove[1]*40, 40, 40);
+    noFill();
+  }
   var i;
   var j;
   for (i = 0; i < tablero.length; i++) {
     for (j = 0; j < tablero[i].length; j++) {
-        if (tablero[i][j] == 1) 
-            rect(j*60+30, i*60+30, 50, 50);
+        if (tablero[i][j] == 1) {
+          stroke(0, 0, 255);
+          line(j*40+10, i*40+10, j*40+30, i*40+30);
+          line(j*40+30, i*40+10, j*40+10, i*40+30);
+        }
+        else if (tablero[i][j] == -1) {
+          stroke(255, 0, 0);
+          ellipse(j*40+20, i*40+20, 30, 30);
+        }
     }
   }
-
-  
-  //rect(50, 50, 50, 50);
-  //image(img, 0, 0);
 }
 
 function mousePressed() {
-    //print(mouseX);
-    rect(50, 50, 50, 50);
+  cellX = Math.floor((mouseX/40));
+  cellY = Math.floor((mouseY/40));
+  if (validPlay(cellX, cellY)) {
+    socket.emit('play', cellX, cellY, oponent);
+  }
 }
+
+function validPlay(cellX, cellY) {
+  if (0 <= cellX && cellX < 15 && 0 <= cellY && cellY < 15) {
+    if (tablero[cellY][cellX] == 0 && turn == side && game) {
+      return true;
+    }
+  }
+  else {
+    return false;
+  }
+}
+/*function mousePressed() {
+  socket.emit('playerArrives');
+  cellX = Math.floor((mouseX/40));
+  cellY = Math.floor((mouseY/40));
+  //console.log(cellX + " " + cellY);
+  if (0 <= cellX && cellX < 15 && 0 <= cellY && cellY < 15) {
+    if (tablero[cellY][cellX] == 0 && game) {
+      socket.emit('move', cellX, cellY);
+    }
+  }
+  return false;
+}
+*/
+function win() {
+  var i, j;
+  var h, v, d1, d1;
+  for (i = 0; i < 15; i++) {
+    for (j = 0; j < 11; j++) {
+      h = tablero[i][j] + tablero[i][j+1] + tablero[i][j+2] + tablero[i][j+3] + tablero[i][j+4];
+      v = tablero[j][i] + tablero[j+1][i] + tablero[j+2][i] + tablero[j+3][i] + tablero[j+4][i];
+      if (h == 5 || v == 5) {
+        document.getElementById("turno").innerHTML = "<font color='blue'>X gana</font>";
+        //game = false;
+        return true;
+      }
+      else if (h == -5 || v == -5) {
+        document.getElementById("turno").innerHTML = "<font color='red'>O gana</font>";
+        //game = false;
+        return true;
+      }
+    }
+  }
+  for (i = 0; i < 11; i++) {
+    for (j = 0; j < 11; j++) {
+      d1 = tablero[i][j] + tablero[i+1][j+1] + tablero[i+2][j+2] + tablero[i+3][j+3] + tablero[i+4][j+4];
+      d2 = tablero[i+4][j] + tablero[i+3][j+1] + tablero[i+2][j+2] + tablero[i+1][j+3] + tablero[i][j+4];
+      if (d1 == 5 || d2 == 5) {
+        document.getElementById("turno").innerHTML = "<font color='blue'>X gana</font>";
+        //game = false;
+        return true;
+      }
+      else if (d1 == -5 || d2 == -5) {
+        document.getElementById("turno").innerHTML = "<font color='red'>O gana</font>";
+        //game = false;
+        return true;
+      }
+    }
+  }
+}
+
+
+//////////////////////// sockets
+socket.on('oponentArrive', function(oponentArrived){
+  oponent = oponentArrived;
+  document.getElementById("oponent").innerHTML = "llego oponente " + oponent;
+});
+
+socket.on('play', function(cellX, cellY){
+  tablero[cellY][cellX] = turn;
+  lastMove = [cellX, cellY];
+  turn *= -1;
+  if (turn == -1) {
+    document.getElementById("turno").innerHTML = "<font color='blue'>Turno de X</font>"
+  }
+  else if (turn == 1) {
+    document.getElementById("turno").innerHTML = "<font color='red'>Turno de O</font>"
+  }
+  if (win()) {
+    game = false;
+    ///// emitir para que sume a la puntuacion
+  }
+});
+
+
+/////////sockets viejos
+/*
+socket.on('move', function(cellX, cellY, p){
+  tablero[cellY][cellX] = p;
+  lastMove = [cellX, cellY];
+  if (p == -1) {
+    document.getElementById("turno").innerHTML = "<font color='blue'>Turno de X</font>"
+  }
+  else if (p == 1) {
+    document.getElementById("turno").innerHTML = "<font color='red'>Turno de O</font>"
+  }
+  if (win()) {
+    game = false;
+    ///// emitir para que sume a la puntuacion
+  }
+});
+
+socket.on('playerReady', function(p){
+  if (p == 'X') {
+    document.getElementById('player').innerHTML = "<font color='blue'>Estas jugando como " + p + "</font>";
+  }
+  else if (p == 'O') {
+    document.getElementById('player').innerHTML = "<font color='red'>Estas jugando como " + p + "</font>";
+  }
+});
+*/
 </script>

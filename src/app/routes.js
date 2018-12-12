@@ -1,16 +1,18 @@
 const User = require('../app/models/user');
 
-
 function buscar(req,res){
 
     User.find(function (err, data) {
    
 
-   	for (var i = 0; i < data.length; i++) {
-	res.write( data[i].local.username + '\t' + data[i].local.elo + '\t' + data[i].local.email + '\n');
-	}
-    
-    res.end();
+   	//for (var i = 0; i < data.length; i++) {
+	//res.write( data[i].local.username + '\t' + data[i].local.elo + '\t' + data[i].local.email + '\n');
+	//}
+    //res.end();
+    	res.render('ranking', {
+			users: data
+		});
+
     });
 
 }
@@ -51,9 +53,7 @@ module.exports = (app, passport) => {
 
 	
 	app.get('/profile', isLoggedIn, (req, res) => {
-		res.render('profile', {
-			user: req.user
-		});
+		res.render('profile');
 	});
 
 	app.get('/profile/ranking', isLoggedIn, buscar, (req, res) => {
@@ -76,7 +76,11 @@ module.exports = (app, passport) => {
 	});
 
 	app.get('/game', (req, res) => {
-		res.render('game');
+		//console.log(req.query.player);
+		res.render('game', {
+			player_type: req.query.player_type,
+			host: req.query.host
+		});
 	});
 };
 
